@@ -12,12 +12,13 @@ lock = Lock()
 with open('config.json') as f:
     config = json.loads(f.read())
 
-def resp(text, code):
+def flaskresponse(text, code):
     return Response(response=text, status=code, mimetype="text/plain")
 
-@app.route('/<int:pull>', defaults={'branch': 'mozilla-central'})
-@app.route('/<int:pull>/<branch>')
-def pull(pull, branch):
+def identityresponse(text, code):
+    return (text, code)
+
+def handle_pull(pull, branch, resp):
     if branch not in config["gecko-clones"]:
         return resp("{}", 400)
     with lock:
@@ -34,12 +35,32 @@ def pull(pull, branch):
                     return resp(line.replace("remote:   ", ""), 200)
         return resp("(no try url found)", 200)
 
+@app.route('/homu', methods = ['POST'])
+def homu():
+    post = request.get_json()
+    pr = post['pull']
+    extra_data = post['extra_data']
+    branch = 'mozilla-central'
+    if extra_data == "autoland":
+        branch = "autoland"
+    text,status = handle_pull(pr, branch, identityresponse)
+    if status == 200:
+        return flaskresponse(text, 200)
+    else:
+        return flaskresponse(":broken_heart: error pushing to try", 200)
+
+
+@app.route('/<int:pull>', defaults={'branch': 'mozilla-central'})
+@app.route('/<int:pull>/<branch>')
+def flask_pull(pull, branch):
+    handle_pull(pull, branch, flaskresponse)
+
 @app.route('/')
 def index():
     return "Hi!"
 
 def main():
-    app.run(host=config["host"])
+    app.run(host=config["host"], port=config["port"])
 
 if __name__ == "__main__":
     main()
