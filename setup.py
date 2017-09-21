@@ -6,7 +6,6 @@ setup(
     author='The Servo Project Developers',
     url='https://github.com/servo/servo-gecko-try',
     description='A service that lets you make Gecko try pushes out of Servo pull requests',
-
     packages=['servo_gecko_try'],
     install_requires=[
         'flask',
