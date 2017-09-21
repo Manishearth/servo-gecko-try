@@ -61,7 +61,7 @@ def flask_pull(pull, branch):
 
 @app.route('/')
 def index():
-    return "Hi!"
+    return "Hi from servo-gecko-try!"
 
 def main():
     global config
