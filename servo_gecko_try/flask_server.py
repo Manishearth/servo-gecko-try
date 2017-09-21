@@ -53,7 +53,7 @@ def homu():
 @app.route('/<int:pull>', defaults={'branch': 'mozilla-central'})
 @app.route('/<int:pull>/<branch>')
 def flask_pull(pull, branch):
-    handle_pull(pull, branch, flaskresponse)
+    return handle_pull(pull, branch, flaskresponse)
 
 @app.route('/')
 def index():
