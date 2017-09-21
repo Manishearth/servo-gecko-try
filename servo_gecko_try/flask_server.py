@@ -23,8 +23,10 @@ def ensure_init():
 def handle_pull(pull, branch):
     if branch not in config["gecko-clones"]:
         return ("{}", 400)
+    selfdir = os.path.dirname(__file__)
+
     with lock:
-        proc = subprocess.Popen(["bash", "run.sh",
+        proc = subprocess.Popen(["bash", os.path.join(selfdir, "run.sh"),
                                  "%d" % pull, config['servo-clone']['folder'],
                                  config['gecko-clones'][branch]['folder']],
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
