@@ -12,13 +12,24 @@ lock = Lock()
 with open('config.json') as f:
     config = json.loads(f.read())
 
+def ensure_init():
+    if not os.path.isdir(config['servo-clone']['folder']):
+        proc = subprocess.Popen(["git", "clone", config['servo-clone']['remote'], config['servo-clone']['folder']])
+        proc.wait()
+    for clone in config['gecko-clones']:
+        if not os.path.isdir(config['gecko-clones'][clone]['folder']):
+            proc = subprocess.Popen(["hg", "clone", config['gecko-clones'][clone]['remote'], config['gecko-clones'][clone]['folder']])
+            proc.wait()
+
+
+
 def handle_pull(pull, branch):
     if branch not in config["gecko-clones"]:
         return ("{}", 400)
     with lock:
         proc = subprocess.Popen(["bash", "run.sh",
-                                 "%d" % pull, config['servo-clone'],
-                                 config['gecko-clones'][branch]],
+                                 "%d" % pull, config['servo-clone']['folder'],
+                                 config['gecko-clones'][branch]['folder']],
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
         if proc.returncode != 0:
@@ -56,6 +67,7 @@ def index():
     return "Hi!"
 
 def main():
+    ensure_init()
     app.run(host=config["host"], port=config["port"])
 
 if __name__ == "__main__":

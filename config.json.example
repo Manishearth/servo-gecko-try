@@ -1,8 +1,17 @@
 {
-    "servo-clone": "./servo-clone",
+    "servo-clone": {
+            "folder": "./servo-clone",
+            "remote": "https://github.com/servo/servo.git"
+    },
     "gecko-clones": {
-        "mozilla-central": "./m-c-clone",
-        "autoland": "./autoland-clone"
+        "mozilla-central": {
+            "folder": "./m-c-clone",
+            "remote": "https://hg.mozilla.org/mozilla-central/"
+        },
+        "autoland": {
+            "folder": "./autoland-clone",
+            "remote": "https://hg.mozilla.org/integration/autoland/"
+        }
     },
     "host": "0.0.0.0",
     "port": 6000
