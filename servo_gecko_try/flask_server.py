@@ -33,7 +33,7 @@ def handle_pull(pull, branch):
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = proc.communicate()
         if proc.returncode != 0:
-            return ("Error applying patch.\n\n\nStdout:\n\n%s\n\n\nStderr:\n\n%s" % (stdout, stderr), 500)
+            return ("Error applying patch.\n\n\nStdout:\n\n{}\n\n\nStderr:\n\n{}".format(stdout, stderr), 500)
         if stdout:
             for line in stdout.split('\n'):
                 if line.startswith("remote:   https://treeherder.mozilla.org/"):
