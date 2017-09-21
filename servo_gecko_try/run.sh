@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 wd=`pwd`
 set -e
 cd $2 # servo-clone
@@ -12,4 +12,4 @@ hg qdelete servo.patch || true
 hg pull -u
 hg qimport ${wd}/servo.patch
 hg qpush servo.patch
-./mach try  -b do -p linux64-stylo -u crashtest,mochitests,reftest,reftest-1,reftest-2,reftest-3,reftest-4 -t none
+./mach try  -b do -p linux64 -u all -t none
