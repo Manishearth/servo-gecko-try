@@ -9,9 +9,6 @@ app = Flask(__name__)
 config = {}
 lock = Lock()
 
-with open('config.json') as f:
-    config = json.loads(f.read())
-
 def ensure_init():
     if not os.path.isdir(config['servo-clone']['folder']):
         proc = subprocess.Popen(["git", "clone", config['servo-clone']['remote'], config['servo-clone']['folder']])
@@ -67,6 +64,9 @@ def index():
     return "Hi!"
 
 def main():
+    global config
+    with open('config.json') as f:
+        config = json.loads(f.read())
     ensure_init()
     app.run(host=config["host"], port=config["port"])
 
